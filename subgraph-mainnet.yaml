@@ -6,12 +6,12 @@ dataSources:
     name: NFTPositionsManager
     network: mainnet
     source:
-      address: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
+      address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
       abi: NFTPositionsManager
-      startBlock: 12804494 # when first ewit-usdc nft was created
+      startBlock: 12747274 # when first elfi-dai nft was created
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+    apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
         - Approval
@@ -41,9 +41,9 @@ dataSources:
     name: UniV3Staker
     network: mainnet
     source:
-      address: '0x9213d5c6d737Fc2744db9d67037fE90D76Cb0F77'
+      address: "0x9213d5c6d737Fc2744db9d67037fE90D76Cb0F77"
       abi: UniV3Staker
-      startBlock: 12874861
+      startBlock: 12747274 # when first elfi-dai nft was created
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

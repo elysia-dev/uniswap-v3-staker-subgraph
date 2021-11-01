@@ -46,7 +46,7 @@ export function handleIncentiveEnded(event: IncentiveEnded): void {
   }
 }
 
-export function handleRewardClaimed(event: RewardClaimed): void {}
+export function handleRewardClaimed(event: RewardClaimed): void { }
 
 export function handleTokenStaked(event: TokenStaked): void {
   let entity = Position.load(event.params.tokenId.toHex());
