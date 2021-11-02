@@ -7,7 +7,7 @@ import {
   TokenStaked,
   TokenUnstaked,
 } from '../generated/UniV3Staker/UniV3Staker';
-import { Incentive, Position } from '../generated/schema';
+import { Incentive, Position, IncentivePosition } from '../generated/schema';
 
 export function handleIncentiveCreated(event: IncentiveCreated): void {
   let incentiveIdTuple: Array<ethereum.Value> = [
@@ -50,24 +50,38 @@ export function handleRewardClaimed(event: RewardClaimed): void { }
 
 export function handleTokenStaked(event: TokenStaked): void {
   let entity = Position.load(event.params.tokenId.toHex());
+  let incentive = Incentive.load(event.params.incentiveId.toHex());
+  let incentivePosition = IncentivePosition.load(event.params.incentiveId.toHex() + event.params.tokenId.toHex())
+
   if (entity != null) {
     entity.staked = true;
     entity.liquidity = event.params.liquidity;
     entity.save();
   }
+
+  if (incentivePosition == null) {
+    incentivePosition = new IncentivePosition(event.params.incentiveId.toHex() + event.params.tokenId.toHex());
+  }
+
+  incentivePosition.incentive = incentive.id;
+  incentivePosition.position = entity.id;
+  incentivePosition.active = true;
+  incentivePosition.save();
 }
 
 export function handleTokenUnstaked(event: TokenUnstaked): void {
-  let entity = Position.load(event.params.tokenId.toHex());
-  if (entity != null) {
-    entity.staked = false;
-    entity.save();
+  let incentivePosition = IncentivePosition.load(event.params.incentiveId.toHex() + event.params.tokenId.toHex())
+
+  if (incentivePosition != null) {
+    incentivePosition.active = false;
+    incentivePosition.save();
   }
 }
 
 export function handleDepositTransferred(event: DepositTransferred): void {
   let entity = Position.load(event.params.tokenId.toHex());
   if (entity != null) {
+    entity.staked = false;
     entity.oldOwner = event.params.oldOwner;
     entity.owner = event.params.newOwner;
     entity.save();

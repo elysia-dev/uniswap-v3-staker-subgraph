@@ -7,6 +7,14 @@ type Incentive @entity {
   refundee: Bytes!
   reward: BigInt!
   ended: Boolean!
+  incentivePotisions: [IncentivePosition!]! @derivedFrom(field: "incentive")
+}
+
+type IncentivePosition @entity {
+  id: ID!
+  active: Boolean!
+  incentive: Incentive!
+  position: Position!
 }
 
 type Position @entity {
@@ -17,4 +25,5 @@ type Position @entity {
   oldOwner: Bytes
   liquidity: BigInt!
   approved: Bytes
+  incentivePotisions: [IncentivePosition!]! @derivedFrom(field: "position")
 }
