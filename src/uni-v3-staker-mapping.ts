@@ -1,4 +1,4 @@
-import { ethereum, crypto } from '@graphprotocol/graph-ts';
+import { ethereum, crypto, BigInt } from '@graphprotocol/graph-ts';
 import {
   DepositTransferred,
   IncentiveCreated,
@@ -53,11 +53,33 @@ export function handleTokenStaked(event: TokenStaked): void {
   let incentive = Incentive.load(event.params.incentiveId.toHex());
   let incentivePosition = IncentivePosition.load(event.params.incentiveId.toHex() + event.params.tokenId.toHex())
 
+  // If incentive is initialized before ELFI-staking, save meaningless entity
+  if (!incentive) {
+    incentive = new Incentive(event.transaction.hash.toHex());
+    incentive.rewardToken = event.transaction.hash;
+    incentive.pool = event.transaction.hash;
+    incentive.startTime = BigInt.fromI32(0);
+    incentive.endTime = BigInt.fromI32(0);
+    incentive.refundee = event.transaction.from;
+    incentive.reward = BigInt.fromI32(0);
+    incentive.ended = true;
+    incentive.save();
+  }
+
   if (entity != null) {
     entity.staked = true;
     entity.liquidity = event.params.liquidity;
-    entity.save();
+  } else {
+    entity = new Position(event.params.tokenId.toHex());
+    entity.approved = null;
+    entity.tokenId = event.params.tokenId;
+    entity.liquidity = event.params.liquidity;
+    entity.owner = event.transaction.from;
+    entity.staked = true;
+    entity.oldOwner = null;
   }
+
+  entity.save();
 
   if (incentivePosition == null) {
     incentivePosition = new IncentivePosition(event.params.incentiveId.toHex() + event.params.tokenId.toHex());
