@@ -4,6 +4,7 @@ Subgraph to be used by the [Elyfi LP staking](https://github.com/elsia-dev/elyfi
 
 ### Examples
 
+- https://api.studio.thegraph.com/query/862/lp-staking/v0.0.1 (mainnet)
 - https://api.studio.thegraph.com/query/862/lp-staking-rinkeby/v0.0.1 (rinkeby)
 
 ## Schema

@@ -11,7 +11,7 @@ dataSources:
       startBlock: 12747274 # when first elfi-dai nft was created
     mapping:
       kind: ethereum/events
-    apiVersion: 0.0.4
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
         - Approval
